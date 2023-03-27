@@ -1,4 +1,5 @@
-FROM python:3.11.2-slim-bullseye
+#FROM python:3.11.2-slim-bullseye
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.11
 
 RUN apt-get update
 RUN apt-get install -y gcc python3-dev
