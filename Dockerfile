@@ -18,5 +18,5 @@ ENV PYTHON_HOST ${PYTHON_HOST:-0.0.0.0}
 ENV PYTHON_PORT ${PYTHON_PORT:-80}
 
 
-#CMD cd src \ 
-#    && uvicorn main:app --reload
+CMD cd src \ 
+    && uvicorn main:app --port 80
