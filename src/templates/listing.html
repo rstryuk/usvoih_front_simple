@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+
+{% block head %} 
+<script>
+    lots = []
+    const getLots = async () => {
+        const response = await fetch('http://127.0.0.1:8000/api/v1/lot/lots?limit=10&offset=0');
+        const myJson = await response.json(); //extract JSON from the http response
+        lots = myJson
+    }
+</script>
+{% endblock %}
+
+{% block content %} 
+<div class="flex justify-center flex-col items-center">
+    <div class="flex my-3 gap-5">
+        <button onclick="getLots()" class="border-2 rounded-3xl bg-gray-300 p-3">Get lots</button>
+    </div>
+    {% for lot in lots %}
+    <div class="flex rounded-3 border-2 p-3 mt-5">
+        <div class="flex flex-col">
+            <span class="text-2xl font-bold">{{ lot.lot_title }}</span>
+            <span class="text-lg">{{ lot.lot_subcategory.display_name }}</span>
+            <span class="text-lg">{{ lot.lot_address.city}}</span>
+            <span class="text-lg">{{ lot.user.firstname }}</span>
+            <span class="text-lg">{{ lot.date_created }}</span>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
