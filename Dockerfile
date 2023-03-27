@@ -21,5 +21,5 @@ ENV PYTHON_PORT ${PYTHON_PORT:-80}
 
 
 CMD cd src \ 
-    && uvicorn main:app --bind 0.0.0.0:80 --workers 4
+    && uvicorn main:app --port 80 --workers 4
 
