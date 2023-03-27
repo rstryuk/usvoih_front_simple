@@ -21,5 +21,6 @@ ENV PYTHON_PORT ${PYTHON_PORT:-80}
 
 
 CMD cd src \ 
-    && uvicorn main:app --port 80 --reload --workers 4
+    && uvicorn main:app --port 80 --reload 
+    #--workers 4
 
