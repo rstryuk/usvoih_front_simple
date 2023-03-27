@@ -20,6 +20,5 @@ ENV PYTHON_PORT ${PYTHON_PORT:-80}
 
 
 CMD cd src \ 
-    && gunicorn main:app --workers 4 --worker-class \
-    && uvicorn.workers.UvicornWorker --bind 0.0.0.0:80
+    && gunicorn main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:80
 
