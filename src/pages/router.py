@@ -34,6 +34,23 @@ async def get_base_page(request: Request):
         return templates.TemplateResponse("listing.html", {'request': request})
 
 
+@router.get('/lot/{lot_id}')
+async def display_lot(request: Request, lot_id):
+    url: URL = f'{BACKEND_URL}/api/v1/lot/{lot_id}'
+
+    client = AsyncClient()
+    print(url)
+    try:
+        r = await client.get(url)
+        lot = r.json()
+        # print(lots)
+        return templates.TemplateResponse("lot.html", {'request': request, 'lot': lot})
+    except Exception as e:
+        print(e)
+        lots = {}
+        return templates.TemplateResponse("lot.html", {'request': request})
+
+
 @router.get('/login')
 async def login_page(request: Request):
     return templates.TemplateResponse("login.html", {'request': request})
