@@ -59,6 +59,5 @@ async def login_page(request: Request):
 @router.get('/me')
 async def profile_page(request: Request):
     body = await request.body()
-    json = await request.json()
 
-    return templates.TemplateResponse('me.html', {'request': request, 'body': body, 'json': json})
+    return templates.TemplateResponse('me.html', {'request': request, 'body': body})
