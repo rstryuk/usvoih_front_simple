@@ -27,5 +27,12 @@
         </div>
     </div>
 </div>
-<span class="flex ml-5">{{request.userAgent}}</span>
+<span class="flex ml-5" id="user_agent">
+    
+</span>
+<script> 
+    function ua(){ return navigator.userAgent }
+    document.getElementById('user_agent').innerHTML = ua()
+    
+</script>
 {% endblock %}
