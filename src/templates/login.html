@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+<script type="text/javascript">
+    async function login(username, password) {
+        await fetch('http://stg.usvoih.com:8000/api/v1/auth/jwt/login', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application / json',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            data:{
+                'username': username,
+                'password': password
+            }
+        })
+
+    }
+
+</script>
+<form id="login-form" onsubmit="login(document.getElementById('inpt_username').value, document.getElementById('inpt_password').value)">
+    <div id="username" style="margin: 3px;">
+        <label id="lbl-username">Username</label>
+        username: <input type="text" name="inpt_username" id="inpt_username" style="border: 1px solid #625656; border-radius: 15px;">
+    </div>
+    <div id="password" style="margin: 3px;">
+        <label id="lbl-password">Password</label>
+        password: <input type="password" iname="inpt_password" id="inpt_password" style="border: 1px solid #625656; border-radius: 15px;" placeholder="********">
+    </div>
+    <div id="form-buttons">
+        <input type='button' value="Cancel" onclick="location.assign('/index')">
+        <input type='submit' value="OK" onclick=form.submit()>
+    </div>
+    
+
+</form>
+
+{% endblock %}

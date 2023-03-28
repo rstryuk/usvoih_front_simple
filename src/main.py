@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -19,3 +20,8 @@ app.add_middleware(CORSMiddleware,
                    allow_methods=['GET', 'POST', 'PATCH',
                                   'DELETE', 'PUT', 'OPTIONS'],
                    allow_headers=['*'])
+
+
+@app.get('/', response_class=RedirectResponse)
+def home():
+    return '/index'

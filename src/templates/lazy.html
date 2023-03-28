@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+{% block title%}
+Lazy Load
+{% endblock%}
+
+{% block body%}
+
+
+<!-- sticky-top navbar displaying the counter -->
+<nav class="navbar navbar-light bg-light sticky-top">
+  <div class="container">
+
+      <div class="mb-3">
+            <label for="formDestFolder" class="form-label" id="formDestFolderLabel">Destination Folder</label>
+            <input class="form-control form-control-sm" id="formDestFolder" type="folder" value="C:/My/ML/train">
+      </div>
+      <a class="navbar-brand" id="loaded" href="#">0 items loaded</a>
+  </div>
+</nav>
+
+<main class="mt-3">
+
+    <div class="container">
+      <div class="row">
+        <div class="col">
+
+          <!--h4 class="display-4 mb-3">Infinite load</h4-->
+          <!--div class="mb-3">
+            <label for="formDestFolder" class="form-label" id="formDestFolderLabel">Destination Folder</label>
+            <input class="form-control form-control-sm" id="formDestFolder" type="folder" value="C:/My/ML/train/inv">
+          </div-->
+
+          <script type="text/javascript">
+   /////////////////////////////////
+var dFolderLabel = document.querySelector("#formDestFolderLabel");
+var id = ''
+function moveFile(elem) {
+    // Content of ID property
+    itm_id = elem.id.split("_")
+    // Determine the Action: Skip, Del, OK
+    var action = itm_id[0].replace("btn","")
+
+    // DB item Id
+	    id = itm_id[itm_id.length -1]
+
+    // Determine subfolder depending on selected action
+	if(action == 'OK' && elem.type == 'radio')
+	{
+	    subfolder = "/"+elem.value
+	}
+	else{
+	    subfolder = ""
+	}
+
+    var dFolder = document.querySelector("#formDestFolder").value+subfolder;
+	var list_item = document.querySelector("#list-item-"+id)
+
+	if(dFolder.length > 0){
+		fetch("/movefile?id="+id+"&dfolder="+dFolder+"&action="+action).then((response) =>{
+			response.json().then((data) =>{
+			console.log(data.result)
+				if(parseInt(data.result) == 0) {
+					list_item.remove()
+				}
+				else{
+					document.querySelector("#content_"+id).innerHTML = "An error occured while trying to update this item. <br> Move File: "+data.File_del+"<br>Database update: "+data.DB_del
+				}
+			})
+	})
+	}
+	else{
+		dFolderLabel.innerHTML = "Please specify the destination folder value"
+		dFolderLabel.style.color = "red"
+	}
+
+}
+
+//////////////////////////////////////////////////////
+</script>
+
+          <!-- div to contain the content -->
+          <div id="scroller" class="mb-3 row">
+            <div class="list-group col align-self-center" id="list-tab" role="tablist">
+            <!-- template schema, hidden from the dom -->
+              <template id="post_template">
+
+              <!-- template content -->
+              <div class="list list-group-item col-xs-6" id="list-item" style="max-width:520px">
+                    <input type="hidden" name="json_data_" id="json_data_" value="">
+                  <div class="card mb-3 animated fadeIn shadow-sm">
+                  <div class="card-body">
+                  <h4 class="card-title" id="title" style="display:none"></h4>
+                  <span class="text-muted" id="content" style="display:none"></span>
+                  <img class="img-fluid" class="image" src="#" id="image">
+
+                    <div class="form-check btn-group-sm" >
+
+                      <div class="form-check btn-group-sm " role="group">
+                        <button type="button" class="btn btn-warning" onclick="moveFile(this)" value="Skip" id="btnSkip_" itemid="">Skip</button>
+                        <button type="button" class="btn btn-danger" onclick="moveFile(this)" value="Del" id="btnDel_" itemid="">Del</button>
+                        <button type="button" class="btn btn-success " onclick="moveFile(this)" value="OK" id="btnOK_" itemid="" style="display:none">OK</button>
+                      </div>
+
+                        <input type="radio" class="btn-check" name="options" id="btnOK_NYK_" autocomplete="off" onclick="moveFile(this)" value="nyk">
+                        <label class="btn btn-secondary" for="btnOK_NYK_" id="lbl_btnOK_NYK_">NYK</label>
+
+                        <input type="radio" class="btn-check" name="options" id="btnOK_CMR_" autocomplete="off" onclick="moveFile(this)" value="cmr">
+                        <label class="btn btn-secondary" for="btnOK_CMR_" id="lbl_btnOK_CMR_">CMR</label>
+
+                        <input type="radio" class="btn-check" name="options" id="btnOK_RHQ_" autocomplete="off" onclick="moveFile(this)" value="rhq">
+                        <label class="btn btn-secondary" for="btnOK_RHQ_" id="lbl_btnOK_RHQ_">RHQ</label>
+
+                        <input type="radio" class="btn-check" name="options" id="btnOK_OTHER_" autocomplete="off" onclick="moveFile(this)" value="other">
+                        <label class="btn btn-secondary" for="btnOK_OTHER_" id="lbl_btnOK_OTHER_">OTHER</label>
+
+                        <input type="radio" class="btn-check" name="options" id="btnOK_ACT_" autocomplete="off" onclick="moveFile(this)" value="act">
+                        <label class="btn btn-secondary" for="btnOK_ACT_" id="lbl_btnOK_ACT_">ACT</label>
+
+                        <input type="radio" class="btn-check" name="options" id="btnOK_INV_" autocomplete="off" onclick="moveFile(this)" value="inv">
+                        <label class="btn btn-secondary" for="btnOK_INV_" id="lbl_btnOK_INV_">Invoice</label>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </template>
+            </div>
+          </div>
+
+          <!-- element to trigger the IntersectionObserver -->
+          <div class="d-flex justify-content-center mb-3" id="sentinel">
+            <div class="spinner-border" role="status"></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+<script type="text/javascript">
+    // Get references to the dom elements
+var scroller = document.querySelector("#scroller");
+var template = document.querySelector('#post_template');
+var loaded = document.querySelector("#loaded");
+var sentinel = document.querySelector('#sentinel');
+
+// Set a counter to count the items loaded
+var counter = 0;
+var timer = 0
+
+// Function to request new items and render to the dom
+function loadItems() {
+  // Use fetch to request data and pass the counter value in the QS
+  fetch(`/load?c=${counter}`).then((response) => {
+    // Convert the response data to JSON
+    response.json().then((data) => {
+
+      // If empty JSON, exit the function
+      if (!data.length) {
+
+        // Replace the spinner with "No more posts"
+        sentinel.innerHTML = "No more posts";
+        return;
+      }
+      // Iterate over the items in the response
+      for (var i = 0; i < data.length; i++) {
+
+        // Clone the HTML template
+        let template_clone = template.content.cloneNode(true);
+
+        // Get the destination folder name from page
+        var dFolder = document.getElementById("formDestFolder").value
+
+        // Query & update the template content
+        template_clone.querySelector("#title").innerHTML = `${data[i].id}: ${data[i].filename}`;
+
+        template_clone.querySelector("#content").id = "content_"+data[i].id;
+        template_clone.querySelector("#content_"+data[i].id).innerHTML = data[i].parentfolder;
+
+        template_clone.querySelector("#image").src = "/static/data/train/act_tmp/"+data[i].filename;
+        template_clone.querySelector("#list-item").id = "list-item-"+data[i].id
+        // Del Button
+        template_clone.querySelector("#btnDel_").id = "btnDel_"+data[i].id
+        //Skip button
+        template_clone.querySelector("#btnSkip_").id = "btnSkip_"+data[i].id
+        // OK button
+        template_clone.querySelector("#btnOK_").id = "btnOK_"+data[i].id
+        //template_clone.querySelector("#btnOK_"+data[i].id).addEventListener("click", moveFile)
+        template_clone.querySelector("#btnOK_"+data[i].id).itemid = data[i].id
+
+        template_clone.querySelector("#json_data_").id = "json_data_"+data[i].id
+        template_clone.querySelector("#json_data_"+data[i].id).value = JSON.stringify(data[i])
+
+        //// RADIOBUTTONS
+        // NYK
+        template_clone.querySelector("#btnOK_NYK_").id = "btnOK_NYK_"+data[i].id
+        template_clone.querySelector("#btnOK_NYK_"+data[i].id).value = 'nyk'
+        template_clone.querySelector("#lbl_btnOK_NYK_").id = "lbl_btnOK_NYK_"+data[i].id
+        template_clone.querySelector("#lbl_btnOK_NYK_"+data[i].id).setAttribute('for',"btnOK_NYK_"+data[i].id)
+
+        // CMR
+        template_clone.querySelector("#btnOK_CMR_").id = "btnOK_CMR_"+data[i].id
+        template_clone.querySelector("#btnOK_CMR_"+data[i].id).value = 'cmr'
+        template_clone.querySelector("#lbl_btnOK_CMR_").id = "lbl_btnOK_CMR_"+data[i].id
+        template_clone.querySelector("#lbl_btnOK_CMR_"+data[i].id).setAttribute('for',"btnOK_CMR_"+data[i].id)
+
+        // RQH
+        template_clone.querySelector("#btnOK_RHQ_").id = "btnOK_RHQ_"+data[i].id
+        template_clone.querySelector("#btnOK_RHQ_"+data[i].id).value = 'rhq'
+        template_clone.querySelector("#lbl_btnOK_RHQ_").id = "lbl_btnOK_RHQ_"+data[i].id
+        template_clone.querySelector("#lbl_btnOK_RHQ_"+data[i].id).setAttribute('for',"btnOK_RHQ_"+data[i].id)
+
+        // ACT
+        template_clone.querySelector("#btnOK_ACT_").id = "btnOK_ACT_"+data[i].id
+        template_clone.querySelector("#btnOK_ACT_"+data[i].id).value = 'act'
+        template_clone.querySelector("#lbl_btnOK_ACT_").id = "lbl_btnOK_ACT_"+data[i].id
+        template_clone.querySelector("#lbl_btnOK_ACT_"+data[i].id).setAttribute('for',"btnOK_ACT_"+data[i].id)
+
+        // Invoice
+        template_clone.querySelector("#btnOK_INV_").id = "btnOK_INV_"+data[i].id
+        template_clone.querySelector("#btnOK_INV_"+data[i].id).value = 'inv'
+        template_clone.querySelector("#lbl_btnOK_INV_").id = "lbl_btnOK_INV_"+data[i].id
+        template_clone.querySelector("#lbl_btnOK_INV_"+data[i].id).setAttribute('for',"btnOK_INV_"+data[i].id)
+
+        // Other
+        template_clone.querySelector("#btnOK_OTHER_").id = "btnOK_OTHER_"+data[i].id
+        template_clone.querySelector("#btnOK_OTHER_"+data[i].id).value = 'other'
+        template_clone.querySelector("#lbl_btnOK_OTHER_").id = "lbl_btnOK_OTHER_"+data[i].id
+        template_clone.querySelector("#lbl_btnOK_OTHER_"+data[i].id).setAttribute('for',"btnOK_OTHER_"+data[i].id)
+
+        // Append template to dom
+        scroller.appendChild(template_clone);
+        // Increment the counter
+        counter += 1;
+
+        // Update the counter in the navbar
+        loaded.innerText = `${counter} items loaded`;
+      }
+    })
+  })
+}
+
+// Create a new IntersectionObserver instance
+var intersectionObserver = new IntersectionObserver(entries => {
+
+  // Uncomment below to see the entry.intersectionRatio when
+  // the sentinel comes into view
+
+  // entries.forEach(entry => {
+  //   console.log(entry.intersectionRatio);
+  // })
+
+  // If intersectionRatio is 0, the sentinel is out of view
+  // and we don't need to do anything. Exit the function
+  if (entries[0].intersectionRatio <= 0) {
+    return;
+  }
+
+  // Call the loadItems function
+  loadItems();
+
+});
+
+// Instruct the IntersectionObserver to watch the sentinel
+intersectionObserver.observe(sentinel);
+
+</script>
+
+<script type="text/javascript">
+
+</script>
+
+{% endblock%}

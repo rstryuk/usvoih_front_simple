@@ -5,7 +5,7 @@ from config import BACKEND_URL
 import logging
 
 router = APIRouter(
-    prefix='/pages',
+    prefix='',
     tags=['Pages']
 )
 
@@ -18,7 +18,7 @@ def get_base_page(request: Request):
     return templates.TemplateResponse("base.html", {'request': request})
 
 
-@router.get("/listing")
+@router.get("/index")
 async def get_base_page(request: Request):
     url: URL = f'{BACKEND_URL}/api/v1/lot/lots?limit=10&offset=0'
     client = AsyncClient()
@@ -32,3 +32,8 @@ async def get_base_page(request: Request):
         print(e)
         lots = []
         return templates.TemplateResponse("listing.html", {'request': request})
+
+
+@router.get('/login')
+async def login_page(request: Request):
+    return templates.TemplateResponse("login.html", {'request': request})
