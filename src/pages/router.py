@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 from http3 import AsyncClient, URL
 from config import BACKEND_URL
-from logging import log
+import logging
 
 router = APIRouter(
     prefix='/pages',
@@ -25,9 +25,9 @@ async def get_base_page(request: Request):
     try:
         r = await client.get(url)
         lots = r.json()
-        log(0, lots)
+        logging.info(lots)
         return templates.TemplateResponse("listing.html", {'request': request, 'lots': lots})
     except Exception as e:
-        log(1, e)
+        logging.debug(e)
         lots = []
         return templates.TemplateResponse("listing.html", {'request': request})
