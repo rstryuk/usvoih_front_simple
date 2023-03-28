@@ -12,15 +12,21 @@
 {% endblock %}
 
 {% block content %} 
+<span class="flex ml-5"><a href="javascript:history.back()">Go Back</a></span>
 <div class="flex justify-center flex-col items-center">
-    <span class="text-2xl font-bold">{{ lot.lot_title }}</span>
+    <span class="text-3xl font-bold">{{ lot.lot_title }}</span>
     <div class="flex rounded-3 border-2 p-3 mt-5">
         <div class="flex flex-col">
-            <span class="text-lg">{{ lot.description}}</span>
+            <figure class="max-w-lg">
+                <img class="h-auto max-w-full rounded-lg" src="{{backend}}{{ lot.lot_images[0].image_url}}" alt="image description">
+                <figcaption class="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">Image caption</figcaption>
+            </figure>
+            <span class="text-lg">{{ lot.lot_description.lot_description}}</span>
             <span class="text-lg">{{ lot.lot_address.city}}</span>
             <span class="text-lg">{{ lot.user.firstname }}</span>
             <span class="text-lg">{{ lot.date_created }}</span>
         </div>
     </div>
 </div>
+
 {% endblock %}
