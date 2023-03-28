@@ -25,9 +25,9 @@ async def get_base_page(request: Request):
     try:
         r = await client.get(url)
         lots = r.json()
-        logging.info(lots)
+        print(lots)
         return templates.TemplateResponse("listing.html", {'request': request, 'lots': lots})
     except Exception as e:
-        logging.debug(e)
+        print(e)
         lots = []
         return templates.TemplateResponse("listing.html", {'request': request})
