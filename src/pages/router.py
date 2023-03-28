@@ -54,3 +54,8 @@ async def display_lot(request: Request, lot_id):
 @ router.get('/login')
 async def login_page(request: Request):
     return templates.TemplateResponse("login.html", {'request': request})
+
+
+@router.get('/me')
+async def profile_page(request: Request):
+    return templates.TemplateResponse('me.html', {'request': request})
