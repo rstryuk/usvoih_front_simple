@@ -44,7 +44,6 @@ async def display_lot(request: Request, lot_id):
     try:
         r = await client.get(url)
         lot = r.json()
-        print(dir(request))
         return templates.TemplateResponse("lot.html", {'request': request, 'lot': lot, 'backend': BACKEND_URL})
     except Exception as e:
         print(e)
