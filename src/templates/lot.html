@@ -19,7 +19,6 @@
         <div class="flex flex-col">
             <figure class="max-w-lg">
                 <img class="h-auto max-w-full rounded-lg" src="{{backend}}{{ lot.lot_images[0].image_url}}" alt="image description">
-                <figcaption class="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">Image caption</figcaption>
             </figure>
             <span class="text-lg">{{ lot.lot_description.lot_description}}</span>
             <span class="text-lg">{{ lot.lot_address.city}}</span>
@@ -28,5 +27,5 @@
         </div>
     </div>
 </div>
-
+<span class="flex ml-5">{{request.userAgent}}</span>
 {% endblock %}
