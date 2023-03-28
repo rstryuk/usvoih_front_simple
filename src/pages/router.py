@@ -22,6 +22,7 @@ def get_base_page(request: Request):
 async def get_base_page(request: Request):
     url: URL = f'{BACKEND_URL}/api/v1/lot/lots?limit=10&offset=0'
     client = AsyncClient()
+    print(url)
     try:
         r = await client.get(url)
         lots = r.json()
