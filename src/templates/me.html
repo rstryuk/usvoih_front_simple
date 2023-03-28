@@ -13,11 +13,12 @@
 
 {% block content %}
 
-<div>{{ request.body }}</div>
+<div>{{ await request.body() }}</div>
+</tr>
 </p>
-<div> {{ request.json }}</div>
+<div> {{ await request.json() }}</div>
+</tr>
 </p>
-
 <div> {{ request.client }}</div>
 
 {% endblock %}
