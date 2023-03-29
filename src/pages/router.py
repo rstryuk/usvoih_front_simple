@@ -58,6 +58,10 @@ async def login_page(request: Request):
 
 @router.get('/me')
 async def profile_page(request: Request):
+    # https://usvoih-front-simple.onrender.com/me
+    # ?id=360344865&first_name=Roman&username=rstryuk&auth_date=1680067985
+    # &hash=fda8771b596aab4a65c51a25df9961621385f15439bdf97b0edea29916adc7cf
     body = await request.body()
+    params = request.query_params
 
-    return templates.TemplateResponse('me.html', {'request': request, 'body': body})
+    return templates.TemplateResponse('me.html', {'request': request, 'body': params})
